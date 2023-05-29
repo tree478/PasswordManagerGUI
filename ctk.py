@@ -158,7 +158,7 @@ class PasswordManager(ctk.CTk):
             self.widget.destroy()
 
         token = self.fer.encrypt(b"is there a problem with the fernet key?")
-        print(token)
+        print(type(token))
         print(self.fer.decrypt(token))
         print("this worked")
 
@@ -169,9 +169,15 @@ class PasswordManager(ctk.CTk):
                 line = json.loads(line)
                 print("the line after it becomes a dictionary:", line)
                 print("the type for the dictionary:", type(line))
-                for values in line.values():
-                    print("the value for the account name:", values)
-                    print("the decrypted account name:", str(self.fer.decrypt(values))) #this is the line that is not working
+                for value in line.values():
+
+                    print("the value for the account name:", value)
+                    value = value[2:-1]
+                    value = bytes(value, 'utf-8')
+                    print(value)
+                    print(type(value))
+                    decrypted_text = self.fer.decrypt(value)
+                    print("the decrypted account name:", str(decrypted_text)) #this is the line that is not working
                     # decrypted_text = self.fer.decrypt(values)
                     # print(decrypted_text) 
                     # the line above wasn't working, so I tried this, but it clearly doesn't work either
