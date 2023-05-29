@@ -12,6 +12,9 @@ class PasswordManager(ctk.CTk):
     
         super().__init__()
 
+        self.key = self.load_key()
+        self.fer = Fernet(self.key)
+
         self.title("Password Manager")
         self.geometry("1200x600")
         self.configure(width=1200, height=600)
@@ -48,7 +51,7 @@ class PasswordManager(ctk.CTk):
         self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="Password Manager", font=ctk.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
-        self.sidebar_button_1 = ctk.CTkButton(self.sidebar_frame, text='View Passwords')
+        self.sidebar_button_1 = ctk.CTkButton(self.sidebar_frame, text='View Passwords', command=self.change_to_view_passwords)
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
 
         self.sidebar_button_2 = ctk.CTkButton(self.sidebar_frame, text='Add Password', command=self.change_to_add_password)
@@ -57,10 +60,10 @@ class PasswordManager(ctk.CTk):
         self.sidebar_button_3 = ctk.CTkButton(self.sidebar_frame)
         self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
 
-        self.welcome_screen = ctk.CTkFrame(self.interface, width=1000, height=600)
-        self.welcome_screen.pack(side='left', fill='both')
+        self.mainpage = ctk.CTkFrame(self.interface, width=1000, height=600)
+        self.mainpage.pack(side='left', fill='both')
         
-        self.welcome_label = ctk.CTkLabel(self.welcome_screen, text='Welcome! Please choose an option from the sidebar menu!')
+        self.welcome_label = ctk.CTkLabel(self.mainpage, text='Welcome! Please choose an option from the sidebar menu!')
         self.welcome_label.place(relx=0.5, rely=0.5, anchor=CENTER)
 
         self.show_frame(self.entry_frame)
@@ -91,18 +94,17 @@ class PasswordManager(ctk.CTk):
             file.write(json.dumps(dict) + '\n')
 
     def read_list(self):
-        with open('data.py', 'r') as file:
+        with open('data.py', 'rb') as file:
             n_list = json.load(file)
             return n_list
 
     def store_input(self):
 
-        self.key = self.load_key()
-        self.fer = Fernet(self.key)
-
         self.info = {}
 
-        self.account_name_input = str(self.fer.encrypt(b'self.account_name_entry.get()'))
+        self.account_name_input = str(self.fer.encrypt(self.account_name_entry.get().encode()))
+        print(self.account_name_entry.get())
+        print("this was printed")
         self.info['account_name'] = self.account_name_input
         self.username_input = str(self.fer.encrypt(b'self.username_entry.get()'))
         self.info['username'] = self.username_input
@@ -115,46 +117,64 @@ class PasswordManager(ctk.CTk):
 
     def change_to_add_password(self):
 
-        self.add_password_screen = self.welcome_screen
-        self.welcome_label.destroy()
+        for self.widget in self.mainpage.winfo_children():
+            self.widget.destroy()
 
-        self.add_password_instructions = ctk.CTkLabel(self.add_password_screen, text="Please enter the account information:")
+        self.add_password_instructions = ctk.CTkLabel(self.mainpage, text="Please enter the account information:")
         self.add_password_instructions.grid(row=1, column=1, sticky='news', padx=20, pady=20)
 
-        self.account_name_label = ctk.CTkLabel(self.add_password_screen, text="Account Name:")
+        self.account_name_label = ctk.CTkLabel(self.mainpage, text="Account Name:")
         self.account_name_label.grid(row=2, column=1, sticky='news', padx=20, pady=20)
 
-        self.account_name_entry = ctk.CTkEntry(self.add_password_screen, placeholder_text="Account Name")
+        self.account_name_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Account Name")
         self.account_name_entry.grid(row=2, column=2, sticky='news', pady=20)
 
-        self.username_label = ctk.CTkLabel(self.add_password_screen, text="Username:")
+        self.username_label = ctk.CTkLabel(self.mainpage, text="Username:")
         self.username_label.grid(row=3, column=1, sticky='news', padx=20, pady=20)
 
-        self.username_entry = ctk.CTkEntry(self.add_password_screen, placeholder_text="Username")
+        self.username_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Username")
         self.username_entry.grid(row=3, column=2, sticky='news', pady=20)
 
-        self.password_label = ctk.CTkLabel(self.add_password_screen, text="Password:")
+        self.password_label = ctk.CTkLabel(self.mainpage, text="Password:")
         self.password_label.grid(row=4, column=1, sticky='news', padx=20, pady=20)
 
-        self.password_entry = ctk.CTkEntry(self.add_password_screen, placeholder_text="Password")
+        self.password_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Password")
         self.password_entry.grid(row=4, column=2, sticky='news', pady=20)
 
-        self.notes_label = ctk.CTkLabel(self.add_password_screen, text="Notes:")
+        self.notes_label = ctk.CTkLabel(self.mainpage, text="Notes:")
         self.notes_label.grid(row=5, column=1, sticky='news', padx=20, pady=20)
 
-        self.notes_entry = ctk.CTkEntry(self.add_password_screen, placeholder_text="Notes", height=50)
+        self.notes_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Notes", height=50)
         self.notes_entry.grid(row=5, column=2, sticky='news', pady=20)
 
-        self.submit_info = ctk.CTkButton(self.add_password_screen, text="Submit", command=self.store_input())
+        self.submit_info = ctk.CTkButton(self.mainpage, text="Submit", command=self.store_input)
         self.submit_info.grid(row=6, column=2, padx=20, pady=20)
 
-        self.add_password_screen.configure(width=1000, height=600)
-        self.add_password_screen.grid_propagate(False)
+        self.mainpage.configure(width=1000, height=600)
+        self.mainpage.grid_propagate(False)
 
     def change_to_view_passwords(self):
-        with open("data.txt", "r") as file:
+        for self.widget in self.mainpage.winfo_children():
+            self.widget.destroy()
+
+        self.view_passwords_screen = self.mainpage
+
+        token = self.fer.encrypt(b"is there a problem with the fernet key?")
+        print(token)
+        print(self.fer.decrypt(token))
+
+        with open("data.py", "rb") as file:
             for line in file.readlines():
-                print(self.fer.decrypt(line))
+                print("the first type of the line:", type(line))
+                print("the line at the beginning:", line)
+                line = json.loads(line)
+                print("the line after it becomes a dictionary:", line)
+                print("the type for the dictionary:", type(line))
+                for values in line.values():
+                    print("the value for the account name:", values)
+                    decrypted_text = self.fer.decrypt(values)
+                    print(decrypted_text)
+                    print("the decrypted account name:", str(self.fer.decrypt(values)))
 
 
 if __name__ == '__main__':
