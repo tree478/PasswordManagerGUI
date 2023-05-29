@@ -98,7 +98,7 @@ class PasswordManager(ctk.CTk):
             n_list = json.load(file)
             return n_list
 
-    def store_input(self):
+    def store_input(self): #when you press submit on the add passwords frame, this function runs, it stores the user input in data.py
 
         self.info = {}
 
@@ -115,7 +115,7 @@ class PasswordManager(ctk.CTk):
 
         self.write_dict(self.info)
 
-    def change_to_add_password(self):
+    def change_to_add_password(self): #this changes the frame to the add passwords form
 
         for self.widget in self.mainpage.winfo_children():
             self.widget.destroy()
@@ -153,15 +153,14 @@ class PasswordManager(ctk.CTk):
         self.mainpage.configure(width=1000, height=600)
         self.mainpage.grid_propagate(False)
 
-    def change_to_view_passwords(self):
+    def change_to_view_passwords(self): #the fucntion to let you view passwords, runs when you press the 'view passwords button'
         for self.widget in self.mainpage.winfo_children():
             self.widget.destroy()
-
-        self.view_passwords_screen = self.mainpage
 
         token = self.fer.encrypt(b"is there a problem with the fernet key?")
         print(token)
         print(self.fer.decrypt(token))
+        print("this worked")
 
         with open("data.py", "rb") as file:
             for line in file.readlines():
@@ -172,10 +171,10 @@ class PasswordManager(ctk.CTk):
                 print("the type for the dictionary:", type(line))
                 for values in line.values():
                     print("the value for the account name:", values)
-                    decrypted_text = self.fer.decrypt(values)
-                    print(decrypted_text)
-                    print("the decrypted account name:", str(self.fer.decrypt(values)))
-
+                    print("the decrypted account name:", str(self.fer.decrypt(values))) #this is the line that is not working
+                    # decrypted_text = self.fer.decrypt(values)
+                    # print(decrypted_text) 
+                    # the line above wasn't working, so I tried this, but it clearly doesn't work either
 
 if __name__ == '__main__':
     app = PasswordManager()
