@@ -91,7 +91,7 @@ class PasswordManager(ctk.CTk):
     def write_dict(self, dict):
         with open("data.py", "a") as file:
             #json.dump(dict, file)
-            file.write(json.dumps(dict) + '\n')
+            json.dump(dict,file), '\n'
 
     def read_list(self):
         with open('data.py', 'rb') as file:
@@ -103,17 +103,61 @@ class PasswordManager(ctk.CTk):
         self.info = {}
 
         self.account_name_input = str(self.fer.encrypt(self.account_name_entry.get().encode()))
-        print(self.account_name_entry.get())
-        print("this was printed")
         self.info['account_name'] = self.account_name_input
-        self.username_input = str(self.fer.encrypt(b'self.username_entry.get()'))
+        self.username_input = str(self.fer.encrypt(self.username_entry.get().encode()))
         self.info['username'] = self.username_input
-        self.password_input = str(self.fer.encrypt(b'self.password_entry.get()'))
+        self.password_input = str(self.fer.encrypt(self.password_entry.get().encode()))
         self.info['password'] = self.password_input
-        self.notes_input = str(self.fer.encrypt(b'self.notes_entry.get()'))
+        self.notes_input = str(self.fer.encrypt(self.notes_entry.get().encode()))
         self.info['notes'] = self.notes_input
 
         self.write_dict(self.info)
+
+    def show_account(self, account):
+
+        #print("this is the # that gets passed to the function", line_no)
+
+        with open("data.py", "r") as f:
+            #print("this is the # that gets used for the indicies", line_no-1)
+            list_of_accounts = []
+            lines = f.readlines()
+            for line in lines:
+                line = json.loads(line)
+                value = line['account_name']
+                list_of_accounts.append(str(self.fer.decrypt(bytes(value[2:-1], 'utf-8'))))
+            
+            numbers = dict(enumerate(list_of_accounts))
+            data = lines[list(numbers.keys())[list(numbers.values()).index(self.account)]]
+            print(list(numbers.keys())[list(numbers.values()).index(self.account)])
+            data = json.loads(data)
+
+        for self.widget in self.mainpage.winfo_children():
+            self.widget.destroy()
+
+        self.account_name_frame = ctk.CTkFrame(self.mainpage, width=600, height=40)
+        self.account_name_frame.grid(row=0, column=0, padx=200, pady=5)
+
+        self.account_name = ctk.CTkLabel(self.account_name_frame, text="Account Name: " + str(self.fer.decrypt(bytes(data['account_name'][2:-1], 'utf-8')))[2:-1])
+        self.account_name.grid(row=0, column=0, padx=30, pady=10)
+
+        self.username_frame = ctk.CTkFrame(self.mainpage, width=600, height=40)
+        self.username_frame.grid(row=1, column=0, padx=200, pady=5)
+
+        self.username = ctk.CTkLabel(self.username_frame, text="Username: " + str(self.fer.decrypt(bytes(data['username'][2:-1], 'utf-8')))[2:-1])
+        self.username.grid(row=0, column=0, padx=30, pady=10)
+
+        self.password_frame = ctk.CTkFrame(self.mainpage, width=600, height=40)
+        self.password_frame.grid(row=2, column=0, padx=200, pady=5)
+
+        self.password = ctk.CTkLabel(self.password_frame, text="Password: " + str(self.fer.decrypt(bytes(data['password'][2:-1], 'utf-8')))[2:-1])
+        self.password.grid(row=0, column=0, padx=30, pady=10)
+
+        self.notes_frame = ctk.CTkFrame(self.mainpage, width=600, height=40)
+        self.notes_frame.grid(row=3, column=0, padx=200, pady=5)
+
+        self.notes = ctk.CTkLabel(self.notes_frame, text="Notes: " + str(self.fer.decrypt(bytes(data['notes'][2:-1], 'utf-8')))[2:-1])
+        self.notes.grid(row=0, column=0, padx=30, pady=10)
+
 
     def change_to_add_password(self): #this changes the frame to the add passwords form
 
@@ -153,15 +197,34 @@ class PasswordManager(ctk.CTk):
         self.mainpage.configure(width=1000, height=600)
         self.mainpage.grid_propagate(False)
 
+
     def change_to_view_passwords(self): #the fucntion to let you view passwords, runs when you press the 'view passwords button'
         for self.widget in self.mainpage.winfo_children():
             self.widget.destroy()
 
         with open("data.py", "rb") as file:
+            line_no = 1
+            list_of_accounts = []
             for line in file.readlines():
                 line = json.loads(line)
-                for value in line.values():
-                    print("the decrypted account name:", str(self.fer.decrypt(bytes(value[2:-1], 'utf-8'))))
+                value = line['account_name']
+                list_of_accounts.append(str(self.fer.decrypt(bytes(value[2:-1], 'utf-8'))))
+            
+            row_=0
+            column_=0
+            numbers = dict(enumerate(list_of_accounts))
+            #list(numbers.keys())[list(numbers.values()).index(self.account)])
+            list_of_buttons = []
+            for self.account in list_of_accounts:
+                ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: self.show_account(self.account)).grid(row=row_, column=column_, padx=50, pady=10)
+                # self.account = ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: print(self.account))
+                # self.account.grid(row=row_, column=column_, padx=50, pady=10)
+                list_of_buttons.append(self.account)
+                self.mainpage.configure(width=1000, height=600)
+                self.mainpage.grid_propagate(False)
+                row_ += 1
+            line_no += 1
+            print(list_of_buttons)
 
 if __name__ == '__main__':
     app = PasswordManager()
