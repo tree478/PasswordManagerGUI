@@ -28,19 +28,19 @@ class PasswordManager(ctk.CTk):
         self.entry_frame = ctk.CTkFrame(self, width=1200, height=600)
         self.entry_frame.grid(row=0, column=0, sticky='nsew')
 
-        self.entry_frame.grid_rowconfigure(0, weight=1)
-        self.entry_frame.grid_rowconfigure(4, weight=1)
-        self.entry_frame.grid_columnconfigure(0, weight=1)
-        self.entry_frame.grid_columnconfigure(2, weight=1)
+        # self.entry_frame.grid_rowconfigure(0, weight=1)
+        # self.entry_frame.grid_rowconfigure(4, weight=1)
+        # self.entry_frame.grid_columnconfigure(0, weight=1)
+        # self.entry_frame.grid_columnconfigure(2, weight=1)
 
         self.instructions = ctk.CTkLabel(self.entry_frame, text = "Please enter your master password:")
-        self.instructions.grid(row=0, column=0, sticky='NEWS')
+        self.instructions.grid(row=0, column=0, sticky='NEWS', padx=500, pady=(250,10))
 
-        self.password_entry = ctk.CTkEntry(self.entry_frame, placeholder_text="Master Password", width=20)
-        self.password_entry.grid(row=1, column=0, sticky='NEWS')
+        self.password_entry = ctk.CTkEntry(self.entry_frame, placeholder_text="Master Password")
+        self.password_entry.grid(row=1, column=0, sticky='NEWS', padx=500, pady=(0,10))
 
-        self.verify_button = ctk.CTkButton(self.entry_frame, text="Submit", command=self.check_password, width=2, height=8)
-        self.verify_button.grid(row=2, column=0, sticky='NEWS')
+        self.verify_button = ctk.CTkButton(self.entry_frame, text="Submit", command=self.check_password, height=12)
+        self.verify_button.grid(row=2, column=0, sticky='NEWS', padx=500, pady=(0,250))
 
         self.sidebar_frame = ctk.CTkFrame(self.interface, width=300, height=600)
         self.sidebar_frame.pack(side='left', fill='y')
@@ -91,7 +91,7 @@ class PasswordManager(ctk.CTk):
     def write_dict(self, dict):
         with open("data.py", "a") as file:
             #json.dump(dict, file)
-            json.dump(dict,file), '\n'
+            json.dump(dict,file)
 
     def read_list(self):
         with open('data.py', 'rb') as file:
@@ -164,35 +164,49 @@ class PasswordManager(ctk.CTk):
         for self.widget in self.mainpage.winfo_children():
             self.widget.destroy()
 
-        self.add_password_instructions = ctk.CTkLabel(self.mainpage, text="Please enter the account information:")
-        self.add_password_instructions.grid(row=1, column=1, sticky='news', padx=20, pady=20)
+        self.add_password_instructions_frame = ctk.CTkFrame(self.mainpage, width=1000, height=100)
+        self.add_password_instructions_frame.pack(side='top')
 
-        self.account_name_label = ctk.CTkLabel(self.mainpage, text="Account Name:")
-        self.account_name_label.grid(row=2, column=1, sticky='news', padx=20, pady=20)
+        self.add_password_instructions = ctk.CTkLabel(self.add_password_instructions_frame, text="Please enter the account information:")
+        self.add_password_instructions.grid(row=1, column=1, sticky='news', padx=400, pady=20)
 
-        self.account_name_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Account Name")
+        self.add_info_frame = ctk.CTkFrame(self.mainpage, width=1000, height=500)
+        self.add_info_frame.pack(side='top')
+
+        self.account_name_label = ctk.CTkLabel(self.add_info_frame, text="Account Name:")
+        self.account_name_label.grid(row=2, column=1, sticky='news', padx=(350,20), pady=20)
+
+        self.account_name_entry = ctk.CTkEntry(self.add_info_frame, placeholder_text="Account Name")
         self.account_name_entry.grid(row=2, column=2, sticky='news', pady=20)
 
-        self.username_label = ctk.CTkLabel(self.mainpage, text="Username:")
-        self.username_label.grid(row=3, column=1, sticky='news', padx=20, pady=20)
+        self.username_label = ctk.CTkLabel(self.add_info_frame, text="Username:")
+        self.username_label.grid(row=3, column=1, sticky='news', padx=(350,20), pady=20)
 
-        self.username_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Username")
+        self.username_entry = ctk.CTkEntry(self.add_info_frame, placeholder_text="Username")
         self.username_entry.grid(row=3, column=2, sticky='news', pady=20)
 
-        self.password_label = ctk.CTkLabel(self.mainpage, text="Password:")
-        self.password_label.grid(row=4, column=1, sticky='news', padx=20, pady=20)
+        self.password_label = ctk.CTkLabel(self.add_info_frame, text="Password:")
+        self.password_label.grid(row=4, column=1, sticky='news', padx=(350,20), pady=20)
 
-        self.password_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Password")
+        self.password_entry = ctk.CTkEntry(self.add_info_frame, placeholder_text="Password")
         self.password_entry.grid(row=4, column=2, sticky='news', pady=20)
 
-        self.notes_label = ctk.CTkLabel(self.mainpage, text="Notes:")
-        self.notes_label.grid(row=5, column=1, sticky='news', padx=20, pady=20)
+        self.notes_label = ctk.CTkLabel(self.add_info_frame, text="Notes:")
+        self.notes_label.grid(row=5, column=1, sticky='news', padx=(350,20), pady=20)
 
-        self.notes_entry = ctk.CTkEntry(self.mainpage, placeholder_text="Notes", height=50)
+        self.notes_entry = ctk.CTkEntry(self.add_info_frame, placeholder_text="Notes", height=50)
         self.notes_entry.grid(row=5, column=2, sticky='news', pady=20)
 
-        self.submit_info = ctk.CTkButton(self.mainpage, text="Submit", command=self.store_input)
+        self.submit_info = ctk.CTkButton(self.add_info_frame, text="Submit", command=self.store_input)
         self.submit_info.grid(row=6, column=2, padx=20, pady=20)
+
+        print(self.submit_info)
+
+        self.add_password_instructions_frame.configure(width=1000, height=100)
+        self.add_password_instructions_frame.grid_propagate(False)
+
+        self.add_info_frame.configure(width=1000, height=500)
+        self.add_info_frame.grid_propagate(False)
 
         self.mainpage.configure(width=1000, height=600)
         self.mainpage.grid_propagate(False)
@@ -212,19 +226,22 @@ class PasswordManager(ctk.CTk):
             
             row_=0
             column_=0
-            numbers = dict(enumerate(list_of_accounts))
+            dict_of_buttons = {}
+            #numbers = dict(enumerate(list_of_accounts))
             #list(numbers.keys())[list(numbers.values()).index(self.account)])
-            list_of_buttons = []
+            #list_of_accounts = dict(list_of_accounts)
             for self.account in list_of_accounts:
-                ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: self.show_account(self.account)).grid(row=row_, column=column_, padx=50, pady=10)
-                # self.account = ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: print(self.account))
-                # self.account.grid(row=row_, column=column_, padx=50, pady=10)
-                list_of_buttons.append(self.account)
+                dict_of_buttons[self.account] = ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: self.show_account(self.account)).grid(row=row_, column=column_, padx=50, pady=10)
+                # print(list_of_accounts[i])
+                # list_of_accounts[self.account].grid(row=row_, column=column_, padx=50, pady=10)
+                #ctk.CTkButton(self.mainpage, text=self.account[2:-1], command=lambda: show_account(self.account)).grid(row=row_, column=column_, padx=50, pady=10)
+                #list_of_buttons.append(self.account)
+                print(dict_of_buttons)
                 self.mainpage.configure(width=1000, height=600)
                 self.mainpage.grid_propagate(False)
                 row_ += 1
             line_no += 1
-            print(list_of_buttons)
+            #print(list_of_buttons)
 
 if __name__ == '__main__':
     app = PasswordManager()
