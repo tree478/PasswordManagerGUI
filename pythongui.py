@@ -14,9 +14,9 @@ from tkinter import ttk
 import random
 import multiprocessing
 import time
-import customtkinter
+#import customtkinter
 
-customtkinter.set_default_color_theme('blue')
+#customtkinter.set_default_color_theme('blue')
 
 one = ['artless', 'bawdy', 'beslubbering', 'bootless', 'churlish', 'cockered', 'clouted', 'craven', 'currish', 'dankish', 'dissembling', 
     'droning','errant', 'fawning', 'fobbing' 'froward', 'frothy', 'gleeking', 'goatish', 'gorbellied', 'impertinent', 'infectious', 
@@ -75,27 +75,27 @@ def decrypt(strs):
 
 def adding(tab1):
     #my_tabs.add(tab1) # adding tab
-    l1 = customtkinter.CTkLabel(tab1, text="Account Name:")
+    l1 = tk.Label(tab1, text="Account Name:")
     l1.grid(row=1, column=0)
     l1.grid_rowconfigure(1, weight = 1)
     l1.grid_columnconfigure(0, weight = 1)
-    account_name = customtkinter.CTkEntry(tab1)
+    account_name = tk.Label(tab1)
     account_name.grid(row=1, column=1)
     account_name.grid_rowconfigure(1, weight = 1)
     account_name.grid_columnconfigure(1, weight = 1)
-    l2 = customtkinter.CTkLabel(tab1, text="Username:")
+    l2 = tk.Label(tab1, text="Username:")
     l2.grid(row=3, column=0)
     l2.grid_rowconfigure(3, weight = 1)
     l2.grid_columnconfigure(0, weight = 1)
-    username = customtkinter.CTkEntry(tab1)
+    username = tk.Label(tab1)
     username.grid(row=3, column=1)
     username.grid_rowconfigure(3, weight = 1)
     username.grid_columnconfigure(1, weight = 1)
-    l3 = customtkinter.CTkLabel(tab1, text="Password:")
+    l3 = tk.Label(tab1, text="Password:")
     l3.grid(row=5, column=0)
     l3.grid_rowconfigure(5, weight = 1)
     l3.grid_columnconfigure(0, weight = 1)
-    password = customtkinter.CTkEntry(tab1)
+    password = tk.Label(tab1)
     password.grid(row=5, column=1)
     password.grid_rowconfigure(5, weight = 1)
     password.grid_columnconfigure(1, weight = 1)
@@ -135,16 +135,16 @@ def commands():
                         #text2.pack()
                         text.insert(END, "\n")
 
-        button = customtkinter.CTkButton(tab2, text = "Refresh", command=refresh)
+        button = tk.Button(tab2, text = "Refresh", command=refresh)
         button.pack()
 
-        scroll_bar = customtkinter.CTkScrollbar(tab2)
+        scroll_bar = tk.Scrollbar(tab2)
   
         scroll_bar.pack( side = RIGHT, fill = Y )
 
 
         with open("passwords.txt", "r", encoding="utf-8") as f:
-            text = customtkinter.CTkTextbox(tab2, yscrollcommand = scroll_bar.set )
+            text = tk.Listbox(tab2, yscrollcommand = scroll_bar.set )
             for line in f.readlines():
                     length = len(line)
                     print(length)
@@ -163,7 +163,7 @@ def commands():
         text.pack(fill=BOTH, expand=True)
         scroll_bar.configure( command = text.yview )
 
-    insulted = customtkinter.CTkLabel(tab0, text = " ")
+    insulted = tk.Label(tab0, text = " ")
     insulted.grid(row=5, column=0)
 
     def stop():
@@ -184,21 +184,21 @@ def commands():
         if insulted.winfo_exists() == 1:
             insulted.destroy()
     tab1 = my_tabs.add('Add') # adding tab
-    l1 = customtkinter.CTkLabel(tab1, text="Account Name:")
+    l1 = tk.Label(tab1, text="Account Name:")
     l1.grid(row = 1, column = 0)
-    account_name = customtkinter.CTkEntry(tab1, placeholder_text='Account Name')
+    account_name = tk.Entry(tab1, placeholder_text='Account Name')
     account_name.grid(row = 1, column = 2)
-    l2 = customtkinter.CTkLabel(tab1, text="Username:")
+    l2 = tk.Label(tab1, text="Username:")
     l2.grid(row = 2, column = 0)
-    username = customtkinter.CTkEntry(tab1, placeholder_text='Username')
+    username = tk.Entry(tab1, placeholder_text='Username')
     username.grid(row = 2, column = 2)
-    l3 = customtkinter.CTkLabel(tab1, text="Password:")
+    l3 = tk.Label(tab1, text="Password:")
     l3.grid(row = 3, column = 0)
-    password = customtkinter.CTkEntry(tab1, placeholder_text='Password')
+    password = tk.Entry(tab1, placeholder_text='Password')
     password.grid(row = 3, column = 2)
     tab2 = my_tabs.add('View') # adding tab
     my_tabs.pack(expand = 1, fill ="both")
-    info = customtkinter.CTkLabel(tab2, text=view())
+    info = tk.Label(tab2, text=view())
     info.pack()
 
     def write():
@@ -212,30 +212,30 @@ def commands():
         username.delete(0, END)
         password.delete(0, END)
 
-    turn_in = customtkinter.CTkButton(tab1, text="Submit", command=write)
+    turn_in = tk.Button(tab1, text="Submit", command=write)
     turn_in.grid(row=4, column=4)
     my_w.bind('<Return>',lambda event:write())
 
 
 
-my_w = customtkinter.CTk()
+my_w = tk.Tk()
 my_w.geometry("400x200")
 my_w.title('Password Manager')
-my_tabs = customtkinter.CTkTabview(my_w) # declaring 
+my_tabs = ttk.Notebook(my_w) # declaring 
 
 tab0 = my_tabs.add('Master Password')
 # tab1 = my_tabs.add('Add')
-# test = customtkinter.CTkLabel(tab1, text='hello')
+# test = tk.Label(tab1, text='hello')
 # test.pack()
 # tab2 = my_tabs.add('View')
 
 #my_tabs.add(tab0) # adding tab
 my_tabs.pack(expand = 1, fill ="both")
-instructions = customtkinter.CTkLabel(tab0, text = "Please enter your master password below:")
+instructions = tk.Label(tab0, text = "Please enter your master password below:")
 instructions.grid(row=2,column=0)
-m_password = customtkinter.CTkEntry(tab0, placeholder_text='Master Password')
+m_password = tk.Entry(tab0, placeholder_text='Master Password')
 m_password.grid(row=3, column=0)
-submit = customtkinter.CTkButton(tab0, text = "Submit", command=commands)
+submit = tk.Button(tab0, text = "Submit", command=commands)
 submit.grid(row=4, column=0)
 my_w.bind('<Return>',lambda event:commands())
 

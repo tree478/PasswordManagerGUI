@@ -1,14 +1,13 @@
-# a213_multi_factor.py
-import tkinter as tk
-import multifactorgui as mfg
+#Create main window
+#Ask for master password
+#Check master password
+#If correct:
+    #Create account info form
+        #Submit button - writes user input in a .txt file
+    #Another tab to view info
+        #A button for each account
+        #Add link to go to website
+#If incorrect:
+    #User gets insulted
+    #Program quits
 
-# create a multi-factor interface to a restricted app
-my_auth = mfg.MultiFactorAuth()
-
-# set the users authentication information
-question = "What is your favorite color"
-answer = "purple"
-my_auth.set_authentication(question, answer)
-
-# start the GUI
-my_auth.mainloop()
