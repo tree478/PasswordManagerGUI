@@ -25,6 +25,7 @@ class PasswordManager(ctk.CTk):
 
         self.interface = ctk.CTkFrame(self, width=1200, height=600)
         self.interface.grid(row=0, column=0, sticky='nsew')
+        #hello
 
         self.entry_frame = ctk.CTkFrame(self, width=1200, height=600)
         self.entry_frame.grid(row=0, column=0, sticky='nsew')
